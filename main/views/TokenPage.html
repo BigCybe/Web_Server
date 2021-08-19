@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Token</title>
+    <style>
+        h3 {
+            margin-top: 2em;
+            margin-bottom: 1em;
+            color: rgb(0,0,255);
+        }
+        .jwt{
+            color: red;
+        }
+        .b1 {
+            background: chartreuse;
+            color: black;
+            font-size: 15pt;
+        }
+        span{
+            color: #6e8b3d
+        }
+        input {
+            border-radius: 3px; //закругление углов (общее)
+        -webkit-border-radius: 3px; //закругление углов (Google Chrome)
+        -moz-border-radius: 3px; //закругление углов (FireFox)
+        -khtml-border-radius: 3px; //закругление углов (Safari)
+        height: 24px; // высота на свое усмотрение
+        width: 120px; // ширина на свое усмотрение
+        color: #ff7f24; //цвет шрифта в обычном состоянии
+        font-size: 18px; // Размер шрифта
+        font-family: Tahoma; // Стиль шрифта
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -75px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+  <h3>Заполните форму для получения <span>jwt токена</span></h3>
+  <input id="loginj" type="text" name="login" placeholder="Логин">
+  <input id="passwordj" type="text" name="password" placeholder="Пароль">
+  <button id="getjwt" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+    SEND
+  </button>
+
+
+  <h3>Ваш токен: </h3>
+  <input type="text" id="result">
+  <div class="tooltip">
+      <button onclick="myFunction()" onmouseout="outFunc()">
+          <span class="tooltiptext" id="myTooltip">
+              Copy to clipboard
+          </span>
+          Copy token
+      </button>
+  </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+<script>
+  $("#getjwt").on("click", function() {
+    $.ajax({
+      method: 'post',
+      url: "http://localhost:8080/user/login",
+      contentType: "application/json",
+      data: JSON.stringify({
+        login: $("#loginj").val(),
+        password: $("#passwordj").val(),
+      }),
+      success: function(response) {
+        console.log(response);
+        $("#result").val(response)
+      },
+      error: function(response, errorData) {
+        console.log(response);
+        alert(errorData + " Please see you log\nConsole->Object->responseText");
+      },
+    });
+  });
+</script>
+<script>
+    function myFunction() {
+        var copyText = document.getElementById("result");
+        copyText.select();
+        document.execCommand("copy");
+
+        var tooltip = document.getElementById("myTooltip")
+        tooltip.innerHTML = "Token copied"
+    }
+
+    function outFunc() {
+        var tooltip = document.getElementById("myTooltip");
+        tooltip.innerHTML = "Copy to clipboard";
+    }
+</script>
+</html>

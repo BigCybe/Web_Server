@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <style>
+        p {
+            margin-top: 2em;
+            margin-bottom: 1em;
+            color: rgb(0,0,255);
+        }
+        h3 {
+            margin-top: 2em;
+            margin-bottom: 1em;
+            color: rgb(0,0,255);
+        }
+        .b1 {
+            background: chartreuse;
+            color: black;
+            font-size: 15pt;
+        }
+        .b2 {
+            background: aqua;
+            color: blueviolet;
+            font-size: 15pt;
+        }
+        .b3 {
+            background: deeppink;
+            color: yellow;
+            font-size: 15pt;
+        }
+        span{
+            color: #6e8b3d
+        }
+        input {
+        border-radius: 3px; //закругление углов (общее)
+        -webkit-border-radius: 3px; //закругление углов (Google Chrome)
+        -moz-border-radius: 3px; //закругление углов (FireFox)
+        -khtml-border-radius: 3px; //закругление углов (Safari)
+        height: 24px; // высота на свое усмотрение
+        width: 160px; // ширина на свое усмотрение
+        color: #ff7f24; //цвет шрифта в обычном состоянии
+        font-size: 18px; // Размер шрифта
+        font-family: Tahoma; // Стиль шрифта
+        }
+        .token {
+            position: relative;
+            top: 50px;
+            right: 420px;
+        }
+        .group {
+            position: relative;
+            top: 50px;
+            right: 410px;
+        }
+        .task {
+            position: relative;
+            top: 50px;
+            right: 400px;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Заполните форму для добавления нового <span>ПОЛЬЗОВАТЕЛЯ</span></h3>
+
+    <input id="name" type="text" name="name" placeholder="Имя пользователя">
+    <input id="login" type="text" name="login" placeholder="Логин">
+    <input id="password" type="password" name="password" placeholder="Пароль">
+    <button id="userform" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        SEND
+    </button>
+
+
+    <h3>Заполните форму для добавления новой <span>ГРУППЫ</span></h3>
+
+    <input id="groupn" type="text" name="group_name" placeholder="Имя группы">
+    <input id="groupd" type="text" name="group_description" placeholder="Описание группы">
+    <input id="parenti" type="text" name="parent_id" placeholder="ID родителя">
+    <button id="groupform" type="submit" class="b2" name="button" style="width: 72px; height: 30px;">
+        SEND
+    </button>
+
+
+    <h3>Заполните форму для добавления новой <span>ЗАДАЧИ</span></h3>
+
+    <input id="groupi" type="text" name="group_id" placeholder="ID группы">
+    <input id="task" type="text" name="task" placeholder="Задание">
+    <button id="taskform" type="submit" class="b3" name="button" style="width: 72px; height: 30px;">
+        SEND
+    </button>
+
+
+    <a href="http://localhost:8080/token" target="new" class="token"> ПОЛУЧИТЬ ТОКЕН </a>
+    <a href="http://localhost:8080/group" target="new" class="group"> РАБОТА С ГРУППАМИ </a>
+    <a href="http://localhost:8080/task" target="new" class="task"> РАБОТА С ЗАДАЧАМИ </a>
+</body>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+<script>
+    $("#userform").on("click", function() {
+        $.ajax({
+            method: 'post',
+            url: "http://localhost:8080/user/auth/new",
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: $("#name").val(),
+                login: $("#login").val(),
+                password: $("#password").val(),
+            }),
+            success: function(response) {
+                console.log(response);
+                alert(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+<script>
+    $("#groupform").on("click", function() {
+        $.ajax({
+            method: 'post',
+            url: "http://localhost:8080/group/new",
+            contentType: "application/json",
+            data: JSON.stringify({
+                group_name: $("#groupn").val(),
+                group_description: $("#groupd").val(),
+                parent_id: +$("#parenti").val(),
+            }),
+            success: function (response) {
+                console.log(response);
+                alert(response);
+            },
+            error: function (response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            }
+        });
+    });
+</script>
+<script>
+    $("#taskform").on("click", function() {
+        $.ajax({
+            method: 'post',
+            url: "http://localhost:8080/task/new",
+            contentType: "application/json",
+            //dataType: "json",
+            data: JSON.stringify({
+                group_id: +$("#groupi").val(),
+                task: $("#task").val(),
+            }),
+            success: function (response,) {
+                console.log(response);
+                //const a = Object.entries(response).map(([k, v]) => `${k}: ${v}`).join(', ');
+                alert(response);
+            },
+            error: function (response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            }
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group</title>
+</head>
+<body>
+    <h3>Получение отсортированных групп</h3>
+    <select id="select">
+        <option label="Сортировка по имени" value="1" selected>name</option>
+        <option label="Сначала родители">parents_first</option>
+        <option label="Родитель - его дети">parent_with_childs</option>
+    </select>
+    <input id="limit" type="text" name="limit" placeholder="Количество групп">
+    <button id="getgroups" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        GET
+    </button>
+
+    <h3>Получение группы по ID</h3>
+    <input id="idgroup" type="text" placeholder="Введите ID группы">
+    <button id="getgroup" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        GET
+    </button>
+
+    <h3>Получить список детей группы по ID</h3>
+    <input id="idgroupchild" type="text" placeholder="Введите ID группы">
+    <button id="getgroupchild" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        GET
+    </button>
+
+    <h3>Удалить группу по ID</h3>
+    <input id="iddelete" type="text" placeholder="Введите ID группы">
+    <button id="deletegroup" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        DELETE
+    </button>
+
+    <h3>Обновление группы по ID</h3>
+    <input id="update" type="text" placeholder="ID группы">
+    <input id="updaten" type="text" placeholder="Имя группы">
+    <input id="updated" type="text" placeholder="Описание группы">
+    <input id="updatep" type="text" placeholder="ID родителя">
+    <button id="updategroup" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        UPDATE
+    </button>
+
+    <h3>Результат: </h3>
+    <pre><h4 id="result"></h4></pre>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+<script>
+    $("#getgroups").on("click", function() {
+        var myselect = $("#select").val()
+        var limit = $("#limit").val()
+        $.ajax({
+            method: 'get',
+            url: "http://localhost:8080/group/sort?sort="+myselect+"&limit="+limit,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#getgroup").on("click", function() {
+        var id = $("#idgroup").val();
+        $.ajax({
+            method: 'get',
+            url: "http://localhost:8080/group/"+id,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#deletegroup").on("click", function() {
+        var id = $("#iddelete").val();
+        $.ajax({
+            method: 'delete',
+            url: "http://localhost:8080/group/"+id,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#getgroupchild").on("click", function() {
+        var id = $("#idgroupchild").val();
+        $.ajax({
+            method: 'get',
+            url: "http://localhost:8080/group/child/"+id,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#updategroup").on("click", function() {
+        var id = $("#update").val()
+        $.ajax({
+            method: 'put',
+            url: "http://localhost:8080/group/"+id,
+            contentType: "application/json",
+            data: JSON.stringify({
+                group_name: $("#updaten").val(),
+                group_description: $("#updated").val(),
+                parent_id: $("#updatep").val()
+            }),
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    $(document).ready(function()
+    {
+        $("#userform").on("submit", function() {
+            $.ajax({
+                url: "http://localhost:8080/auth/new",
+                method: 'post',
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify({
+                    name: 'Imia',
+                    login: 'lagin',
+                    password: 'paroleLL88',
+                }),
+                success: function(response) {
+                    console.log('success', arguments);
+                    console.log("Ajax request: success // (sendAjaxRequest)");
+                    return true
+                },
+                error: function() {
+                    console.log('error', arguments);
+                },
+                complete: function() {
+                    console.log('complete', arguments);
+                }
+            }).done(function() {
+                console.log('done', arguments);
+            });
+        });
+    });
+</script>
+<p>Заполните форму для добавления нового пользователя</p>
+<form id="userform" method="post" action="http://localhost:8080/auth/new">
+    <input type="submit" value="SEND">
+</form>
+
+
+</body>
+</html>

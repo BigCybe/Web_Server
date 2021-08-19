@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task</title>
+</head>
+<body>
+    <h3>Получение отсоритрованных задач</h3>
+
+    <select id="select">
+        <option label="Сортировка по имени" selected>name</option>
+        <option label="Сортировка по группам">groups</option>
+    </select>
+
+    <input id="limit" type="text" name="limit" placeholder="Кол-во задач">
+
+    <select id="selectt">
+        <option label="Все" selected>all</option>
+        <option label="Завершенные" selected>completed</option>
+        <option label="В работе" selected>working</option>
+    </select>
+
+    <button id="gettasks" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        GET
+    </button>
+
+
+    <h3>Изменение данных задания</h3>
+
+    <input id="taskid" type="text" placeholder="ID задания">
+    <input id="groupid" type="text" placeholder="ID группы">
+    <input id="task" type="text" placeholder="Описание задания">
+
+    <button id="updatetask" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        UPDATE
+    </button>
+
+
+    <h3>Получение заданий группы с фильтрацией по типу</h3>
+
+    <input id="gtaskid" type="text" placeholder="ID группы">
+
+    <select id="selecttype">
+        <option label="Все" selected>all</option>
+        <option label="Завершенные" selected>completed</option>
+        <option label="В работе" selected>working</option>
+    </select>
+
+    <button id="getsorttaskbytipe" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        GET
+    </button>
+
+
+    <h3>Изменение статуса задания</h3>
+
+    <input id="statuses" type="text" placeholder="ID задания">
+
+    <select id="selectstatus">
+        <option label="Завершить" selected>true</option>
+        <option label="Сделать незавершенным" selected>false</option>
+    </select>
+
+    <button id="changestatus" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        CHANGE
+    </button>
+
+
+    <h3>Получить статистику по задачам</h3>
+
+    <select id="stat">
+        <option label="Сегодня" selected>today</option>
+        <option label="Вчера" selected>yesterday</option>
+        <option label="Неделя" selected>week</option>
+        <option label="Месяц" selected>month</option>
+    </select>
+
+    <button id="getstat" type="submit" class="b1" name="button" style="width: 72px; height: 30px;">
+        GET
+    </button>
+
+    <h3>Результат: </h3>
+    <pre><h4 id="result"></h4></pre>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="  crossorigin="anonymous"></script>
+
+<script>
+    $("#gettasks").on("click", function() {
+        var sort = $("#select").val()
+        var limit = $("#limit").val()
+        var type = $("#selectt").val()
+        $.ajax({
+            method: 'get',
+            url: "http://localhost:8080/task/?sort="+sort+"&limit="+limit+"&type="+type,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#updatetask").on("click", function() {
+        var id = $("#taskid").val()
+        $.ajax({
+            method: 'put',
+            url: "http://localhost:8080/task/"+id,
+            contentType: "application/json",
+            data: JSON.stringify({
+                group_id: +$("#groupid").val(),
+                task: $("#task").val(),
+            }),
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#getsorttaskbytipe").on("click", function() {
+        var id = $("#gtaskid").val()
+        var type = $("#selecttype").val()
+        $.ajax({
+            method: 'get',
+            url: "http://localhost:8080/task/group/"+id+"?type="+type,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#changestatus").on("click", function() {
+        var id = $("#statuses").val()
+        var status = $("#selectstatus").val()
+        $.ajax({
+            method: 'put',
+            url: "http://localhost:8080/task/mod/"+id+"?finished="+status,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+
+<script>
+    $("#getstat").on("click", function() {
+        var time = $("#stat").val()
+        $.ajax({
+            method: 'get',
+            url: "http://localhost:8080/task/stat/"+time,
+            success: function(response) {
+                console.log(response);
+                $("#result").text(response);
+            },
+            error: function(response, errorData) {
+                console.log(response);
+                alert(errorData + " Please see you log\nConsole->Object->responseText");
+            },
+        });
+    });
+</script>
+</html>
